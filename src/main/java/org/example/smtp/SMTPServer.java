@@ -11,6 +11,7 @@ public class SMTPServer {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("SMTP Server is listening on port " + PORT);
 
+
             while (true) {
                 System.out.println(" En attente d'un client...");
                 Socket socket = serverSocket.accept(); // Bloque jusqu'à une connexion
