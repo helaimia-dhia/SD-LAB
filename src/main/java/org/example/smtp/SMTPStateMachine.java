@@ -94,6 +94,7 @@ public class SMTPStateMachine {
                 }
 
             case DATA:
+
                 if (command.equals(".")) {
                     for (String recipient : recipients) {
                         String recipientUsername = extractUsername(recipient);
@@ -107,6 +108,8 @@ public class SMTPStateMachine {
 
                     resetTransaction();
                     return "250 OK";
+                } else if (command.equals("QUIT")) {
+                    return "221 Bye";
                 } else {
                     emailContent.append(command).append("\n");
                     return null;
