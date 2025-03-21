@@ -32,7 +32,10 @@ public class SMTPStateMachine {
                 } else if (cmd.equals("QUIT")) {
                     currentState = SMTPState.QUIT;
                     return "221 Bye";
-                } else {
+                }else if (!cmd.equals("HELO") || !cmd.equals("EHLO")){
+                    return " 503 Bad sequence of commands";
+                }
+                else {
                     return "501 Syntax error in parameters or arguments";
                 }
 
@@ -54,6 +57,8 @@ public class SMTPStateMachine {
                 } else if (cmd.equals("RSET")) {
                     resetTransaction();
                     return "250 OK - Transaction reset";
+                } else if (! (cmd.equals("MAIL") && parts.length > 1 && parts[1].startsWith("FROM:"))) {
+                    return " 503 Bad sequence of commands";
                 } else {
                     return "501 Syntax error in parameters or arguments";
                 }
@@ -94,9 +99,9 @@ public class SMTPStateMachine {
                         String recipientUsername = extractUsername(recipient);
                         if (recipientUsername != null) {
                             EmailStorage.storeEmail(recipientUsername, recipient, sender, emailContent.toString());
-                            System.out.println("📩 Email saved for: " + recipientUsername);
+                            System.out.println("Email saved for: " + recipientUsername);
                         } else {
-                            System.err.println("❌ Invalid recipient format: " + recipient);
+                            System.err.println(" Invalid recipient format: " + recipient);
                         }
                     }
 
