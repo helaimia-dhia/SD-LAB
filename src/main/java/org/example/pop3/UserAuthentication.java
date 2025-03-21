@@ -9,6 +9,7 @@ public class UserAuthentication {
     static {
         users.put("DHIA", "123");
         users.put("MED", "mtps");
+        users.put("POP", "POP");
     }
 
     public static boolean validateUser(String username, String password) {
