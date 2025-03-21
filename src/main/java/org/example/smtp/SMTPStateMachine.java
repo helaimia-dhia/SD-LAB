@@ -109,6 +109,7 @@ public class SMTPStateMachine {
                     resetTransaction();
                     return "250 OK";
                 } else if (command.equals("QUIT")) {
+                    currentState = SMTPState.QUIT;
                     return "221 Bye";
                 } else {
                     emailContent.append(command).append("\n");
