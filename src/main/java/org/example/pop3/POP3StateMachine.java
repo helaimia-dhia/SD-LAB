@@ -55,7 +55,7 @@ public class POP3StateMachine {
             case "USER":
                 return handleUser(parts);
             case "PASS":
-                return handlePass();
+                return handlePass(parts);
             default:
                 return "-ERR Authentication required";
         }
@@ -71,12 +71,20 @@ public class POP3StateMachine {
         }
     }
 
-    private String handlePass() {
+    private String handlePass(String[] parts) {
         if (user == null) return "-ERR USER required first";
-        authenticated = true;
-        loadEmails();
-        state = POP3State.TRANSACTION;
-        return "+OK Password accepted";
+        if (parts.length < 2) return "-ERR Missing password";
+
+        String password = parts[1];
+
+        if (UserAuthentication.validateUser(user, password)) {
+            authenticated = true;
+            loadEmails();
+            state = POP3State.TRANSACTION;
+            return "+OK Password accepted";
+        } else {
+            return "-ERR Invalid password";
+        }
     }
 
     private String handleTransaction(String cmd, String[] parts) {
